@@ -18,9 +18,10 @@ Shell::Shell(string comand)
 /* Modificadores */
 
 /// @brief Esta función permite cargar un archivo ".fa" a la memoria del computador, funciona con vectores y es compatible con la sección de grafos
-/// @param ruta 
+/// @param ruta
 void Shell::cargar(const string &ruta)
 {
+    secuencia->clear();
     try
     {
         ifstream miRuta(ruta);
@@ -37,7 +38,7 @@ void Shell::cargar(const string &ruta)
 
         if (miRuta.peek() == ifstream::traits_type::eof())
         {
-            cout << "El archivo esta vacio" << endl;
+            cout << ruta << "El archivo esta vacio" << endl;
         }
         else
         {
@@ -84,11 +85,18 @@ void Shell::cargar(const string &ruta)
             // secuenciaTemp->ImprimirSecuencia();
         }
 
-        cout << "Han sido cargadas: " << contador << " lineas desde: " << ruta << endl;
+        if (secuencia->size() == 1)
+        {
+            cout << "1 secuencia a cargada correctamente desde " << ruta << endl;
+        }
+        else if (secuencia->size() > 1)
+        {
+            cout << "Han sido cargadas " << secuencia->size() << " lineas desde " << ruta << endl;
+        }
     }
     catch (const exception &e)
     {
-        cout << "No se pudo encontrar el archivo o leerse" << endl;
+        cout << ruta << "No se encuentra o no puede leerse." << endl;
     }
 }
 
@@ -120,12 +128,13 @@ void Shell::listar_Secuencias()
         for (it = secuencia->begin(); it != secuencia->end(); it++)
         {
             it->ImprimirSecuencia();
+            cout << endl;
         }
     }
 }
 
 /// @brief Esta función, aunque no imprime como tal un histograma gráfico, si muestra su tabla, dando código y frecuencia.
-/// @param descripcionSecuencia 
+/// @param descripcionSecuencia
 void Shell::histograma(string descripcionSecuencia)
 {
     list<Secuencia>::iterator it;
@@ -149,14 +158,14 @@ void Shell::histograma(string descripcionSecuencia)
         }
         if (!flagExistencia)
         {
-            cout << "Secuencia inválida" << endl;
+            cout << "Secuencia invalida" << endl;
         }
     }
 }
 
 /// @brief Indica si una secuencia dada por el usuario, es subsecuencia de las secuencias cargadas en memoria, en caso de que así sea, indica cuantas veces está la subsecuencia dentro de las secuencias cargadas
-/// @param esSubsecuencia 
-/// @return 
+/// @param esSubsecuencia
+/// @return
 int Shell::esSubsecuencia(string esSubsecuencia)
 {
 
@@ -187,7 +196,7 @@ int Shell::esSubsecuencia(string esSubsecuencia)
 }
 
 /// @brief Dada una secuancia, esta función indica si esta es subsecuencia, de la secuencia principal, y enmascara en la secuencia principal con 'X' los valores que sean subsecuencias de la secuencia principal
-/// @param subsecuencia 
+/// @param subsecuencia
 void Shell::enmascarar(string subsecuencia)
 {
 
@@ -218,7 +227,7 @@ void Shell::enmascarar(string subsecuencia)
 }
 
 /// @brief Genera un archivo .fa, con las secuencias modificadas.
-/// @param ruta 
+/// @param ruta
 void Shell::guardar(const string &ruta)
 {
 
@@ -237,7 +246,7 @@ void Shell::guardar(const string &ruta)
         {
             salida << it->ObtenerDescripcion() << endl;
             vector<vector<char>> vectortemporal = it->ObtenerInformacionSec();
-            
+
             for (int i = 0; i < vectortemporal.size(); i++)
             {
                 for (int j = 0; j < vectortemporal[i].size(); j++)
@@ -253,6 +262,214 @@ void Shell::guardar(const string &ruta)
 }
 
 /// @brief Se sale de la función en cualquier punto
-void Shell::salir(){
-    exit(0);
+string Shell::salir()
+{
+    comando = "salir";
+}
+
+/// @brief Encargado de desplegar los comandos con los que se puede usar la shell.
+void Shell::ayuda()
+{
+    cout << "---------------------------------| C O M A N D O S |---------------------------------" << endl;
+    cout << ">cargar [nombre_archivo]:\nCarga en memoria los datos contenidos en el archivo identificado por nombre_archivo.\n"
+         << endl;
+    cout << ">conteo:\nImprime por pantalla la cantidad de secuencias cargadas en memoria.\n"
+         << endl;
+    cout << ">listar_secuencias:\nImprime en n lineas la informacion basica de cada secuencia.\n"
+         << endl;
+    cout << ">histograma [descripcion_secuencia]:\nImprime el histograma de una secuencia, en caso de que exista.\n"
+         << endl;
+    cout << ">es_subsecuencia [secuencia]:\nDetermina si una secuencia dada, existe dentro de las secuencias cargadas.\n"
+         << endl;
+    cout << ">enmascarar [secuencia]:\nEnmascara una secuencia dada por el usuario, si existe.\n"
+         << endl;
+    cout << ">guardar [nombre_archivo]:\nGuarda en el archivo nombre_archivo las secuencias cargadas en memoria.\n"
+         << endl;
+    cout << ">codificar [nombre_archivo.fabin]:\nGenera un archivo .fabin con la codificacion de Huffman almacenandolo en disco.\n"
+         << endl;
+    cout << ">decodificar [nombre_archivo.fabin]:\nCarga en memoria las secuencias codificadas en Huffman dentro en un archivo .fabin.\n"
+         << endl;
+    cout << ">ruta_mas_corta [descripcion_secuencia i j x y]:\nImprime la secuencia de vertices del grafo que describen la ruta mas corta entre\n";
+    cout << "la base de la posicion [i, j] y la base de la posicion [x, y]. Tambien imprime el\n";
+    cout << "costo total de la ruta.\n"
+         << endl;
+    cout << ">base_remota [descripcion_secuencia i j]:\nPara la base de la posicion [i, j] de la matriz de la secuencia busca la ubicacion,\n";
+    cout << "de la misma base (misma letra) mas lejana dentro de la matriz. Para esta base\n";
+    cout << "remota, imprime su ubicacion, la secuencia de vertices que describen la ruta\n";
+    cout << "entre la base origen y la base remota, y el costo total de la ruta, teniendo\n";
+    cout << "en cuenta el peso que tiene cada conexion entre bases.\n"
+         << endl;
+    cout << ">salir:\nCierra el programa.\n";
+}
+
+/// @brief Encargado de dar el string que es contenido en el comando.
+/// @return string
+string Shell::obtenerCommando()
+{
+    return comando;
+}
+
+/// @brief
+/// @param Comando
+void Shell::insertarComando(string Comando)
+{
+    comando = Comando;
+}
+
+/// @brief Inicia a correr el shell.
+void Shell::comenzar()
+{
+    string opcion;
+    do
+    {
+        cout << "$ ";
+        getline(cin, opcion);
+        insertarComando(opcion);
+        evaluarComando();
+    } while (obtenerCommando() != "salir");
+}
+
+/// @brief Se encarga de determinar y ejecutar las funciones.
+void Shell::evaluarComando()
+{
+    vector<string> entrada;
+
+    string aux;
+    string::iterator it;
+
+    for (it = comando.begin(); it != comando.end(); it++)
+    {
+        if ((*it == ' ') || (it == comando.end()--))
+        {
+            entrada.push_back(aux);
+            aux.clear();
+        }
+        else
+        {
+            aux = aux + *it;
+        }
+    }
+
+    entrada.push_back(aux);
+
+    if (entrada[0] != "")
+    {
+        if (entrada[0] == "cargar")
+        {
+            if (entrada.size() == 2)
+            {
+                cargar(entrada[1]);
+                insertarComando(entrada[0]);
+            }
+            else
+                cout << "No se especifico el archivo .fa." << endl;
+        }
+        else if (entrada[0] == "conteo")
+        {
+            conteo();
+            insertarComando(entrada[0]);
+        }
+        else if (entrada[0] == "listar_secuencias")
+        {
+            listar_Secuencias();
+            insertarComando(entrada[0]);
+        }
+        else if (entrada[0] == "histograma")
+        {
+            if (entrada.size() == 2)
+            {
+                histograma(entrada[1]);
+                insertarComando(entrada[0]);
+            }
+            else
+                cout << "No se especifico la secuencia." << endl;
+        }
+        else if (entrada[0] == "es_subsecuencia")
+        {
+            if (entrada.size() == 2)
+            {
+                esSubsecuencia(entrada[1]);
+                insertarComando(entrada[0]);
+            }
+            else
+                cout << "No se especifico la subsecuencia." << endl;
+        }
+        else if (entrada[0] == "enmascarar")
+        {
+            if (entrada.size() == 2)
+            {
+                enmascarar(entrada[1]);
+                insertarComando(entrada[0]);
+            }
+            else
+                cout << "No se especifico la secuencia." << endl;
+        }
+        else if (entrada[0] == "guardar")
+        {
+            if (entrada.size() == 2)
+            {
+                guardar(entrada[1]);
+                insertarComando(entrada[0]);
+            }
+            else
+                cout << "No se especifico el archivo." << endl;
+        }
+        else if (entrada[0] == "codificar")
+        {
+            if (entrada.size() == 2)
+            {
+                cout << "En construccion";
+                insertarComando(entrada[0]);
+            }
+            else
+                cout << "No se especifico el archivo." << endl;
+        }
+        else if (entrada[0] == "decodificar")
+        {
+            if (entrada.size() == 2)
+            {
+                cout << "En construccion" << endl;
+                insertarComando(entrada[0]);
+            }
+            else
+                cout << "No se especifico el archivo." << endl;
+        }
+        else if (entrada[0] == "ruta_mas_corta")
+        {
+            if (entrada.size() == 6)
+            {
+                cout << "En construccion" << endl;
+                insertarComando(entrada[0]);
+            }
+            else
+                cout << "No se especifico el archivo." << endl;
+        }
+        else if (entrada[0] == "base_remota")
+        {
+            if (entrada.size() == 4)
+            {
+                cout << "En construccion" << endl;
+                insertarComando(entrada[0]);
+            }
+            else
+                cout << "No se especifico el archivo." << endl;
+        }
+        else if (entrada[0] == "salir")
+        {
+            salir();
+        }
+        else if (entrada[0] == "ayuda")
+        {
+            ayuda();
+        }
+        else if (entrada[0] == "clear")
+        {
+            system("CLS");
+        }
+        else
+        {
+            cout << "Comando inexistente." << endl;
+        }
+        cout << endl;
+    }
 }

@@ -5,14 +5,7 @@ using namespace std;
 
 int main()
 {
-    Shell* s = new Shell();
-    s->cargar("test_genome.fa");
-    s->conteo();
-    s->listar_Secuencias();
-    s->histograma("Full_SEQUENCE");
-    s->esSubsecuencia("A");
-    s->enmascarar("A");
-    s->listar_Secuencias();
-    s->guardar("nuevo.fa");
-    s->salir();
+    Shell *s = new Shell();
+    s->comenzar();
+    return 0;
 }

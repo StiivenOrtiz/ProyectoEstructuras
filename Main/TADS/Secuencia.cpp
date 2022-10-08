@@ -8,8 +8,8 @@ Secuencia::Secuencia()
 }
 
 /// @brief Constructor de Secuencia con parametros (Descripcion, Informacion de Secuencia).
-/// @param Descripcion 
-/// @param InformacionSecuencia 
+/// @param Descripcion
+/// @param InformacionSecuencia
 Secuencia::Secuencia(string &Descripcion, vector<vector<char>> &InformacionSecuencia)
 {
     descripcion = Descripcion;
@@ -17,37 +17,36 @@ Secuencia::Secuencia(string &Descripcion, vector<vector<char>> &InformacionSecue
 }
 
 /// @brief Constructor de Secuencia con ayuda de otra secuencia, se copian la descripción y la información de secuencia.
-/// @param Secuencia 
+/// @param Secuencia
 Secuencia::Secuencia(const Secuencia &Secuencia)
 {
     descripcion = Secuencia.descripcion;
     informacionSecuencia = Secuencia.informacionSecuencia;
 }
 
-
 /// @brief La descripción de la secuencia toma la descripción ingresada.
-/// @param Descripcion 
+/// @param Descripcion
 void Secuencia::InsertarDescripcion(string &Descripcion)
 {
     descripcion = Descripcion;
 }
 
 /// @brief Ingresar como parametros un vector de vector de char, (Informacion de secuencia), para finalmente insertarlo al vector de vector de char (Informacion de Secuencia) de la clase.
-/// @param InformacionSecuencia 
+/// @param InformacionSecuencia
 void Secuencia::InsertarInformacionSec(vector<vector<char>> &InformacionSecuencia)
 {
     informacionSecuencia = InformacionSecuencia;
 }
 
 /// @brief Encargada de retornar la descripción de la secuencia.
-/// @return string 
+/// @return string
 string Secuencia::ObtenerDescripcion() const
 {
     return descripcion;
 }
 
 /// @brief Encargada de obtener la información de la secuencia (vVectorChar o vector<vector<char>).
-/// @return vVectorChar 
+/// @return vVectorChar
 vector<vector<char>> Secuencia::ObtenerInformacionSec() const
 {
     return informacionSecuencia;
@@ -59,7 +58,7 @@ void Secuencia::ImprimirSecuencia() const
     int bases = 0;
     bool codigoCompleto = true;
 
-    cout << "descripción: " << descripcion << endl;
+    cout << descripcion << endl;
 
     for (int i = 0; i < informacionSecuencia.size(); i++)
     {
@@ -71,7 +70,6 @@ void Secuencia::ImprimirSecuencia() const
             {
                 codigoCompleto = false;
             }
-
         }
         cout << endl;
         bases += informacionSecuencia[i].size();
@@ -88,52 +86,52 @@ void Secuencia::ImprimirSecuencia() const
 }
 
 /// @brief Metodo encargado de retornar el histograma de la secuencia.
-/// @param Datos 
-/// @return 
-map<char,int> Secuencia::Histograma() const
+/// @param Datos
+/// @return
+map<char, int> Secuencia::Histograma() const
 {
-    map<char,int> histogramaFinal;
+    map<char, int> histogramaFinal;
 
     for (int i = 0; i < formatoFasta.size(); i++)
     {
-        histogramaFinal.insert(pair<char,int>(formatoFasta[i], 0));
+        histogramaFinal.insert(pair<char, int>(formatoFasta[i], 0));
     }
 
     for (int i = 0; i < informacionSecuencia.size(); i++)
     {
         for (int j = 0; j < informacionSecuencia[i].size(); j++)
         {
-            histogramaFinal[informacionSecuencia[i][j]]++;            
+            histogramaFinal[informacionSecuencia[i][j]]++;
         }
     }
 
-    map<char,int>::iterator it;
-    
+    map<char, int>::iterator it;
+
     return histogramaFinal;
 }
 
 /// @brief Imprime el histograma de secuencias, no gráfico
 void Secuencia::imprimirHistograma() const
 {
-    map<char,int> histogramaFinal = Histograma();
+    map<char, int> histogramaFinal = Histograma();
 
-    map<char,int>::iterator it;
-    
-    cout<<"\n\n   ---------------------------\n";
-    cout<<"|    Código\t"<<"|   Frecuencia\t|"<<endl;
-    cout<<"   ---------------------------\n";
+    map<char, int>::iterator it;
 
+    cout << "\n---------------------------------\n";
+    cout << "|    Codigo\t"
+         << "|   Frecuencia\t|" << endl;
+    cout << "---------------------------------\n";
 
     for (int i = 0; i < formatoFasta.size(); i++)
     {
-        cout<<"|\t"<<formatoFasta[i]<<"\t|\t"<<histogramaFinal[formatoFasta[i]]<<"\t|"<<endl;
+        cout << "|\t" << formatoFasta[i] << "\t|\t" << histogramaFinal[formatoFasta[i]] << "\t|" << endl;
     }
-    cout<<"   ---------------------------\n";
+    cout << "---------------------------------\n";
 }
 
 /// @brief Metodo encargado de retornar la cantidad de veces en las que esta secuencia dada se repite.
-/// @param Secuencia 
-/// @return 
+/// @param Secuencia
+/// @return
 int Secuencia::EsSubSecuencia(const string &Secuencia) const
 {
     int vecesRepetida = 0;
@@ -148,27 +146,27 @@ int Secuencia::EsSubSecuencia(const string &Secuencia) const
         {
             strxlinea += informacionSecuencia[i][j];
         }
-        //cout<<"Linea "<<i<<": ";
-        //cout<<strxlinea<<endl;
+        // cout<<"Linea "<<i<<": ";
+        // cout<<strxlinea<<endl;
         while ((indice = strxlinea.find(Secuencia, posicion)) != string::npos)
         {
             vecesRepetida++;
-            //cout<<" Substring encontrado en la posicion "<<indice<<endl;
-            //cout<<"En la posicion: "<<i<<" "<<indice<<"esta el código: "<<informacionSecuencia[i][indice]<<endl;
+            // cout<<" Substring encontrado en la posicion "<<indice<<endl;
+            // cout<<"En la posicion: "<<i<<" "<<indice<<"esta el código: "<<informacionSecuencia[i][indice]<<endl;
             posicion = indice + 1;
         }
         posicion = 0;
         indice = 0;
         strxlinea = "";
     }
-    
-    return vecesRepetida;
 
+    return vecesRepetida;
 }
 
 /// @brief Pone 'x' sobre los códigos equivalentes al string de parámetro que sean substrings del código completo
-/// @param Secuencia 
-void Secuencia::Enmascarar(const string &subSecuencia){
+/// @param Secuencia
+void Secuencia::Enmascarar(const string &subSecuencia)
+{
 
     int posicion = 0;
     int indice = 0;
@@ -185,8 +183,9 @@ void Secuencia::Enmascarar(const string &subSecuencia){
         while ((indice = strxlinea.find(subSecuencia, posicion)) != string::npos)
         {
             // Al encontrar la posición en la que está el substring, ubico la nueva variable
-            for(int k = 0; k < subSecuencia.size(); k++){
-                informacionSecuencia[i][indice+k] = 'X';
+            for (int k = 0; k < subSecuencia.size(); k++)
+            {
+                informacionSecuencia[i][indice + k] = 'X';
             }
             posicion = indice + 1;
         }
@@ -197,12 +196,10 @@ void Secuencia::Enmascarar(const string &subSecuencia){
     }
 }
 
-
-
 /**
  * @brief Metodo encargado de hacer una copia de la secuencia actual a una nueva.
- * 
- * @param NuevaSecuencia 
+ *
+ * @param NuevaSecuencia
  */
 /* void Secuencia::CopiarSecuencia(Secuencia *&NuevaSecuencia) const
 {

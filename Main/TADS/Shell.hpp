@@ -15,7 +15,7 @@ public:
     Shell(string comand);
 
     // Modificador
-    
+
     /* int guardar(const string &NombreArchivo); */
 
     // Analizador
@@ -27,8 +27,12 @@ public:
     int esSubsecuencia(string subsecuencia);
     void enmascarar(string subsecuencia);
     void guardar(const string &ruta);
-    void salir();
-
+    string obtenerCommando();
+    void insertarComando(string Comando);
+    string salir();
+    void ayuda();
+    void comenzar();
+    void evaluarComando();
 
     /* void listar_Secuencias();
     void enmascarar(string secuencia);
@@ -42,4 +46,3 @@ public:
     // Destructor
     ~Shell();
 };
-
