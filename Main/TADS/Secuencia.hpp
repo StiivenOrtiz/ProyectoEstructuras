@@ -34,6 +34,8 @@ public:
     // Getters
     string ObtenerDescripcion() const;
     vector<vector<char>> ObtenerInformacionSec() const;
+    int numeroBases() const;
+    int ObtenerTamanioIndentacion() const;
 
     // Metodos
     void ImprimirSecuencia() const;

@@ -1,5 +1,6 @@
 #include "Shell.hpp"
 #include "Secuencia.cpp"
+#include "ArbolHuffman.cpp"
 #include <iterator>
 #include <fstream>
 
@@ -18,7 +19,7 @@ Shell::Shell(string comand)
 /* Modificadores */
 
 /// @brief Esta función permite cargar un archivo ".fa" a la memoria del computador, funciona con vectores y es compatible con la sección de grafos
-/// @param ruta 
+/// @param ruta
 void Shell::cargar(const string &ruta)
 {
     try
@@ -125,7 +126,7 @@ void Shell::listar_Secuencias()
 }
 
 /// @brief Esta función, aunque no imprime como tal un histograma gráfico, si muestra su tabla, dando código y frecuencia.
-/// @param descripcionSecuencia 
+/// @param descripcionSecuencia
 void Shell::histograma(string descripcionSecuencia)
 {
     list<Secuencia>::iterator it;
@@ -155,8 +156,8 @@ void Shell::histograma(string descripcionSecuencia)
 }
 
 /// @brief Indica si una secuencia dada por el usuario, es subsecuencia de las secuencias cargadas en memoria, en caso de que así sea, indica cuantas veces está la subsecuencia dentro de las secuencias cargadas
-/// @param esSubsecuencia 
-/// @return 
+/// @param esSubsecuencia
+/// @return
 int Shell::esSubsecuencia(string esSubsecuencia)
 {
 
@@ -187,7 +188,7 @@ int Shell::esSubsecuencia(string esSubsecuencia)
 }
 
 /// @brief Dada una secuancia, esta función indica si esta es subsecuencia, de la secuencia principal, y enmascara en la secuencia principal con 'X' los valores que sean subsecuencias de la secuencia principal
-/// @param subsecuencia 
+/// @param subsecuencia
 void Shell::enmascarar(string subsecuencia)
 {
 
@@ -218,7 +219,7 @@ void Shell::enmascarar(string subsecuencia)
 }
 
 /// @brief Genera un archivo .fa, con las secuencias modificadas.
-/// @param ruta 
+/// @param ruta
 void Shell::guardar(const string &ruta)
 {
 
@@ -237,7 +238,7 @@ void Shell::guardar(const string &ruta)
         {
             salida << it->ObtenerDescripcion() << endl;
             vector<vector<char>> vectortemporal = it->ObtenerInformacionSec();
-            
+
             for (int i = 0; i < vectortemporal.size(); i++)
             {
                 for (int j = 0; j < vectortemporal[i].size(); j++)
@@ -253,6 +254,105 @@ void Shell::guardar(const string &ruta)
 }
 
 /// @brief Se sale de la función en cualquier punto
-void Shell::salir(){
+void Shell::salir()
+{
     exit(0);
+}
+
+void Shell::codificarSecuencua()
+{
+    list<Secuencia>::iterator it;
+    map<char, int> mapaTemporalFrecuencias;
+    map<char, string> mapaTemporalCodigos;
+    ArbolHuffman *arbolTemporal = new ArbolHuffman();
+
+    /* ofstream writer("Prueba.fabin", ios::out | ios::binary | ios::app);
+    if (!writer)
+    {
+        cout << "Cannot open file!" << endl;
+        return;
+    } */
+
+    // Vector de árboles
+
+    vector<map<char, int>> vectorArboles;
+
+    if (secuencia->size() == 0)
+    {
+        cout << "No hay secuencias cargadas en memoria.\n";
+    }
+    else
+    {
+        // Toma el histograma de cada secuencia en particular
+        for (it = secuencia->begin(); it != secuencia->end(); it++)
+        {
+            mapaTemporalFrecuencias = it->Histograma();
+            /* map<char, int>::iterator itmap;
+            for (itmap = mapaTemporalFrecuencias.begin(); itmap != mapaTemporalFrecuencias.end(); itmap++)
+            {
+                cout << "|\t" << itmap->first << "\t|\t" << itmap->second << "\t|" << endl;
+            } */
+
+            mapaTemporalCodigos = arbol->GenerarCodigo(mapaTemporalFrecuencias);
+            arbolTemporal = arbol->GenerarArbol(mapaTemporalFrecuencias);
+
+            // El mapa queda codificado
+            /* map<char, string>::iterator itmap2;
+            for (itmap2 = mapaTemporalCodigos.begin(); itmap2 != mapaTemporalCodigos.end(); itmap2++)
+            {
+                cout << "|\t" << itmap2->first << "\t|\t" << itmap2->second << "\t|" << endl;
+            } */
+            string codigo = arbol->Codificar(it->ObtenerInformacionSec(), mapaTemporalCodigos);
+
+            /* cout<<"Cantidad secuencias: " << secuencia->size() << endl;
+            cout<<"Tamanio nombre: " << it->ObtenerDescripcion().size()-1 <<endl;
+            cout<<"Nombre Secuencia: " << it->ObtenerDescripcion() <<endl;
+            cout<<"Longitud Secuencia: "<< it->numeroBases()<<endl;
+            cout<<"Indentación: "<< it->ObtenerTamanioIndentacion()<<endl;
+            cout<<"Codigo: "<<codigo<<endl; */
+            Codigo code;
+            ofstream writer("Prueba.fabin", ios::out | ios::binary);
+            if (!writer)
+            {
+                cout << "Cannot open file!" << endl;
+                return;
+            }
+            // c->CantidadBases = it->numeroBases() numero total de bases cargadas en memoria función
+            // c->m, hay que crear una función que me devuelva la totalidad de veces que se repite un elemento en todas las secuencias
+            code.cantidadSecuencias = secuencia->size();
+            code.tamanioNombre = it->ObtenerDescripcion().size() - 1;
+            it->ObtenerDescripcion().copy(code.nombreSecuencia, it->ObtenerDescripcion().size() + 1);
+            code.longitudSecuencia = it->numeroBases();
+            code.indentacion = it->ObtenerTamanioIndentacion();
+            codigo.copy(code.secuencia, codigo.size() + 1);
+
+            writer.write((char *)&code, sizeof(code));
+            writer.close();
+
+            Codigo codigoLeido;
+
+            ifstream f("Prueba.fabin", ios::binary);
+
+            if (f.is_open())
+            {
+                f.read((char *)&codigoLeido, sizeof(Codigo));
+                while (!f.eof())
+                {
+                
+
+                    cout << "Cantidad secuencias: " << codigoLeido.cantidadSecuencias << endl;
+                    cout << "Tamanio nombre: " << codigoLeido.tamanioNombre << endl;
+                    cout << "Nombre Secuencia: " << codigoLeido.nombreSecuencia << endl;
+                    cout << "Longitud Secuencia: " << codigoLeido.longitudSecuencia << endl;
+                    cout << "Indentación: " << codigoLeido.indentacion << endl;
+                    cout << "Codigo: " << codigoLeido.secuencia << endl;
+                    f.read((char *)&codigoLeido, sizeof(Codigo));
+                }
+            }
+            else
+                cout << "Error de apertura de archivo." << endl;
+            f.close();
+        }
+        
+    }
 }

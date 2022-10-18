@@ -1,12 +1,16 @@
 #pragma once
 
 #include "Secuencia.hpp"
+#include "ArbolHuffman.hpp"
+#include "Codigo.hpp"
 
 class Shell
 {
 private:
     string comando;
     list<Secuencia> *secuencia = new list<Secuencia>();
+    ArbolHuffman *arbol = new ArbolHuffman();
+    Codigo *c = new Codigo();
 
 public:
     // Contructor
@@ -14,11 +18,7 @@ public:
     Shell();
     Shell(string comand);
 
-    // Modificador
-    
-    /* int guardar(const string &NombreArchivo); */
-
-    // Analizador
+    // Primera parte del proyecto
 
     void cargar(const string &ruta);
     void conteo();
@@ -28,6 +28,13 @@ public:
     void enmascarar(string subsecuencia);
     void guardar(const string &ruta);
     void salir();
+    void codificarSecuencua();
+
+    // Segunda parte del proyecto
+    /* void crearHuffman();
+    void codificarSecuencua();
+    void decodificarSecuencia();
+     */
 
 
     /* void listar_Secuencias();

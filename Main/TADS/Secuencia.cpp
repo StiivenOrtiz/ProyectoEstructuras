@@ -46,6 +46,10 @@ string Secuencia::ObtenerDescripcion() const
     return descripcion;
 }
 
+int Secuencia::ObtenerTamanioIndentacion() const{
+    return informacionSecuencia[0].size();
+}
+
 /// @brief Encargada de obtener la información de la secuencia (vVectorChar o vector<vector<char>).
 /// @return vVectorChar 
 vector<vector<char>> Secuencia::ObtenerInformacionSec() const
@@ -57,6 +61,7 @@ vector<vector<char>> Secuencia::ObtenerInformacionSec() const
 void Secuencia::ImprimirSecuencia() const
 {
     int bases = 0;
+    // Indica si el código está completo o no
     bool codigoCompleto = true;
 
     cout << "descripción: " << descripcion << endl;
@@ -87,6 +92,18 @@ void Secuencia::ImprimirSecuencia() const
     }
 }
 
+int Secuencia::numeroBases() const
+{
+    int bases = 0;
+
+    for (int i = 0; i < informacionSecuencia.size(); i++)
+    {
+        bases += informacionSecuencia[i].size();
+    }
+
+    return bases;
+}
+
 /// @brief Metodo encargado de retornar el histograma de la secuencia.
 /// @param Datos 
 /// @return 
@@ -106,8 +123,6 @@ map<char,int> Secuencia::Histograma() const
             histogramaFinal[informacionSecuencia[i][j]]++;            
         }
     }
-
-    map<char,int>::iterator it;
     
     return histogramaFinal;
 }
