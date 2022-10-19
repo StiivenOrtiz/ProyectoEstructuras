@@ -287,6 +287,7 @@ string Shell::frecuenciasTotales()
 
     for (it = next(it, 1); it != secuencia->end(); it++)
     {
+        str3 = "";
         mapaTemporal = it->Histograma();
         for (mapit = mapaTemporal.begin(); mapit != mapaTemporal.end(); mapit++)
         {
@@ -297,7 +298,6 @@ string Shell::frecuenciasTotales()
             str3 += str + str1 + "," + str2;
         }
     }
-
     return str3;
 }
 
@@ -403,6 +403,7 @@ void Shell::decodificarSecuencua(const string &ruta)
 
         while (!f.eof())
         {
+            cout<<"\n\n------------------------------------------------------------------------------------------------\n\n";
             cout << "Nombre Secuencia: " << codigoLeido.nombreSecuencia << endl;
             cout << "Longitud Secuencia: " << codigoLeido.longitudSecuencia << endl;
             cout << "Indentación: " << codigoLeido.indentacion << endl;
