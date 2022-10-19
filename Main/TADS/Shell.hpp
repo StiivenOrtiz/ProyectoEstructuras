@@ -28,7 +28,12 @@ public:
     void enmascarar(string subsecuencia);
     void guardar(const string &ruta);
     void salir();
+
+    // Segunda parte del proyecto
     void codificarSecuencua();
+    void decodificarSecuencua();
+    int cantidadTotalBases();
+    string frecuenciasTotales();
 
     // Segunda parte del proyecto
     /* void crearHuffman();

@@ -32,7 +32,7 @@ public:
     void InsertarInformacionSec(vector<vector<char>> &InformacionSecuencia);
 
     // Getters
-    string ObtenerDescripcion() const;
+    string ObtenerDescripcion();
     vector<vector<char>> ObtenerInformacionSec() const;
     int numeroBases() const;
     int ObtenerTamanioIndentacion() const;

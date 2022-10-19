@@ -93,7 +93,6 @@ void ArbolHuffman::imprimirCodigosInterno(ArbolHuffman* root, string str, map<ch
         m[root->dato] = str;
         /* cout << root->dato << ": " << str << "\n"; */
     }
-        
  
     imprimirCodigosInterno(root->izquierdo, str + "0", m);
     imprimirCodigosInterno(root->Derecho, str + "1", m);
@@ -108,7 +107,6 @@ string ArbolHuffman::Codificar(vector<vector<char>> secuencia, map<char,string> 
         {
             str += codigo[secuencia[i][j]];
         }
-        cout << endl;
     }
     return str;
 }

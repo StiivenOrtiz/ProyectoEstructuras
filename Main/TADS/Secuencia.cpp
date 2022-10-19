@@ -41,7 +41,7 @@ void Secuencia::InsertarInformacionSec(vector<vector<char>> &InformacionSecuenci
 
 /// @brief Encargada de retornar la descripción de la secuencia.
 /// @return string 
-string Secuencia::ObtenerDescripcion() const
+string Secuencia::ObtenerDescripcion()
 {
     return descripcion;
 }
@@ -132,8 +132,6 @@ void Secuencia::imprimirHistograma() const
 {
     map<char,int> histogramaFinal = Histograma();
 
-    map<char,int>::iterator it;
-    
     cout<<"\n\n   ---------------------------\n";
     cout<<"|    Código\t"<<"|   Frecuencia\t|"<<endl;
     cout<<"   ---------------------------\n";

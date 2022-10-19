@@ -2,7 +2,9 @@
 #include "Secuencia.cpp"
 #include "ArbolHuffman.cpp"
 #include <iterator>
+#include <numeric>
 #include <fstream>
+#include <string>
 
 // Constructores
 
@@ -253,10 +255,50 @@ void Shell::guardar(const string &ruta)
     }
 }
 
-/// @brief Se sale de la función en cualquier punto
-void Shell::salir()
+int Shell::cantidadTotalBases()
 {
-    exit(0);
+
+    list<Secuencia>::iterator it;
+    int acumulador;
+
+    for (it = secuencia->begin(); it != secuencia->end(); it++)
+    {
+        acumulador += it->numeroBases();
+    }
+    return acumulador;
+}
+
+string Shell::frecuenciasTotales()
+{
+
+    map<char, int> mapaTemporalAcumulado;
+    map<char, int> mapaTemporal;
+
+    //----------------------------------------------------------------
+
+    list<Secuencia>::iterator it = secuencia->begin();
+    map<char, int>::iterator mapit;
+    string str = "[";
+    string str1 = "";
+    string str2 = "";
+    string str3 = "";
+
+    mapaTemporalAcumulado = it->Histograma();
+
+    for (it = next(it, 1); it != secuencia->end(); it++)
+    {
+        mapaTemporal = it->Histograma();
+        for (mapit = mapaTemporal.begin(); mapit != mapaTemporal.end(); mapit++)
+        {
+            mapaTemporalAcumulado[mapit->first] = mapaTemporalAcumulado[mapit->first] + mapit->second;
+
+            str1 = mapit->first;
+            str2 = to_string(mapaTemporalAcumulado[mapit->first]) + "]";
+            str3 += str + str1 + "," + str2;
+        }
+    }
+
+    return str3;
 }
 
 void Shell::codificarSecuencua()
@@ -266,16 +308,24 @@ void Shell::codificarSecuencua()
     map<char, string> mapaTemporalCodigos;
     ArbolHuffman *arbolTemporal = new ArbolHuffman();
 
-    /* ofstream writer("Prueba.fabin", ios::out | ios::binary | ios::app);
+    // Reinicia el archivo y escribe el primer elemento
+    ofstream writer("Prueba.fabin", ios::out | ios::binary);
     if (!writer)
     {
-        cout << "Cannot open file!" << endl;
+        cout << "No es posible abrir el archivo" << endl;
         return;
-    } */
+    }
 
-    // Vector de árboles
+    int cantidadSecuencias = secuencia->size();
+    int cantidadTotalBases = this->cantidadTotalBases();
+    string mapas = this->frecuenciasTotales();
+    char arraychar[mapas.size() + 1];
+    strcpy(arraychar, mapas.c_str());
 
-    vector<map<char, int>> vectorArboles;
+    writer.write((char *)&cantidadTotalBases, sizeof(cantidadTotalBases));
+    writer.write((char *)&arraychar, sizeof(arraychar));
+    writer.write((char *)&cantidadSecuencias, sizeof(cantidadSecuencias));
+    writer.close();
 
     if (secuencia->size() == 0)
     {
@@ -287,72 +337,103 @@ void Shell::codificarSecuencua()
         for (it = secuencia->begin(); it != secuencia->end(); it++)
         {
             mapaTemporalFrecuencias = it->Histograma();
-            /* map<char, int>::iterator itmap;
-            for (itmap = mapaTemporalFrecuencias.begin(); itmap != mapaTemporalFrecuencias.end(); itmap++)
-            {
-                cout << "|\t" << itmap->first << "\t|\t" << itmap->second << "\t|" << endl;
-            } */
 
             mapaTemporalCodigos = arbol->GenerarCodigo(mapaTemporalFrecuencias);
             arbolTemporal = arbol->GenerarArbol(mapaTemporalFrecuencias);
 
             // El mapa queda codificado
-            /* map<char, string>::iterator itmap2;
-            for (itmap2 = mapaTemporalCodigos.begin(); itmap2 != mapaTemporalCodigos.end(); itmap2++)
-            {
-                cout << "|\t" << itmap2->first << "\t|\t" << itmap2->second << "\t|" << endl;
-            } */
+
             string codigo = arbol->Codificar(it->ObtenerInformacionSec(), mapaTemporalCodigos);
 
-            /* cout<<"Cantidad secuencias: " << secuencia->size() << endl;
-            cout<<"Tamanio nombre: " << it->ObtenerDescripcion().size()-1 <<endl;
-            cout<<"Nombre Secuencia: " << it->ObtenerDescripcion() <<endl;
-            cout<<"Longitud Secuencia: "<< it->numeroBases()<<endl;
-            cout<<"Indentación: "<< it->ObtenerTamanioIndentacion()<<endl;
-            cout<<"Codigo: "<<codigo<<endl; */
             Codigo code;
-            ofstream writer("Prueba.fabin", ios::out | ios::binary);
+            ofstream writer("Prueba.fabin", ios::out | ios::binary | ios::app);
             if (!writer)
             {
-                cout << "Cannot open file!" << endl;
+                cout << "No es posible abrir el archivo" << endl;
                 return;
             }
-            // c->CantidadBases = it->numeroBases() numero total de bases cargadas en memoria función
-            // c->m, hay que crear una función que me devuelva la totalidad de veces que se repite un elemento en todas las secuencias
-            code.cantidadSecuencias = secuencia->size();
-            code.tamanioNombre = it->ObtenerDescripcion().size() - 1;
-            it->ObtenerDescripcion().copy(code.nombreSecuencia, it->ObtenerDescripcion().size() + 1);
+
+            int n = it->ObtenerDescripcion().size();
+
+            strcpy(code.nombreSecuencia, it->ObtenerDescripcion().c_str());
             code.longitudSecuencia = it->numeroBases();
             code.indentacion = it->ObtenerTamanioIndentacion();
-            codigo.copy(code.secuencia, codigo.size() + 1);
-
+            strcpy(code.secuencia, codigo.c_str());
             writer.write((char *)&code, sizeof(code));
             writer.close();
-
-            Codigo codigoLeido;
-
-            ifstream f("Prueba.fabin", ios::binary);
-
-            if (f.is_open())
-            {
-                f.read((char *)&codigoLeido, sizeof(Codigo));
-                while (!f.eof())
-                {
-                
-
-                    cout << "Cantidad secuencias: " << codigoLeido.cantidadSecuencias << endl;
-                    cout << "Tamanio nombre: " << codigoLeido.tamanioNombre << endl;
-                    cout << "Nombre Secuencia: " << codigoLeido.nombreSecuencia << endl;
-                    cout << "Longitud Secuencia: " << codigoLeido.longitudSecuencia << endl;
-                    cout << "Indentación: " << codigoLeido.indentacion << endl;
-                    cout << "Codigo: " << codigoLeido.secuencia << endl;
-                    f.read((char *)&codigoLeido, sizeof(Codigo));
-                }
-            }
-            else
-                cout << "Error de apertura de archivo." << endl;
-            f.close();
         }
-        
     }
+}
+
+void Shell::decodificarSecuencua()
+{
+
+    string mapss = this->frecuenciasTotales();
+    char arraycharlectura[mapss.size() + 1];
+    Codigo codigoLeido;
+    int prueba;
+    int basesTotales;
+
+    // Variables para decodificar
+
+    list<Secuencia>::iterator it;
+    map<char, int> mapaTemporalFrecuencias;
+    map<char, string> mapaTemporalCodigos;
+    ArbolHuffman *arbolTemporal = new ArbolHuffman();
+
+    ifstream f("Prueba.fabin", ios::binary);
+
+    if (f.is_open())
+    {
+        cout<<"\n\n------------------------------------------------------------------------------------------------\n\n";
+        
+        f.read((char *)&basesTotales, sizeof(int));
+        cout << "Cantidad total Bases: " << basesTotales << endl;
+
+        f.read((char *)&arraycharlectura, sizeof(arraycharlectura));
+        cout << "Bases y frecuencias: " << arraycharlectura << endl;
+
+        f.read((char *)&prueba, sizeof(int));
+        cout << "Cantidad Secuencias: " << prueba << endl;
+
+        f.read((char *)&codigoLeido, sizeof(Codigo));
+
+        // Para decondificar tengo que generar el arbol de cada secuencia
+        it = secuencia->begin();
+
+        while (!f.eof())
+        {
+            cout << "Nombre Secuencia: " << codigoLeido.nombreSecuencia << endl;
+            cout << "Longitud Secuencia: " << codigoLeido.longitudSecuencia << endl;
+            cout << "Indentación: " << codigoLeido.indentacion << endl;
+            cout << "\nCodigo: \n" << codigoLeido.secuencia << endl;
+
+            mapaTemporalFrecuencias = it->Histograma();
+            mapaTemporalCodigos = arbol->GenerarCodigo(mapaTemporalFrecuencias);
+            arbolTemporal = arbol->GenerarArbol(mapaTemporalFrecuencias);
+
+            string decode = arbol->deCodificar(arbolTemporal, codigoLeido.secuencia);
+            cout << "\ndecodificado: ";
+            for (int i = 0; i < decode.size(); i++)
+            {
+                if(i % codigoLeido.indentacion == 0){
+                    cout<<endl;
+                }
+                cout <<decode[i];
+
+            }
+            cout<<"\n\n------------------------------------------------------------------------------------------------\n\n";
+            it++;
+            f.read((char *)&codigoLeido, sizeof(Codigo));
+        }
+    }
+    else
+        cout << "No se pueden cargar las secuencias en -agregar nomarchivo-." << endl;
+    f.close();
+}
+
+/// @brief Se sale de la función en cualquier punto
+void Shell::salir()
+{
+    exit(0);
 }
