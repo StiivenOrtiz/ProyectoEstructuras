@@ -301,7 +301,7 @@ string Shell::frecuenciasTotales()
     return str3;
 }
 
-void Shell::codificarSecuencua()
+void Shell::codificarSecuencua(const string &ruta)
 {
     list<Secuencia>::iterator it;
     map<char, int> mapaTemporalFrecuencias;
@@ -309,7 +309,7 @@ void Shell::codificarSecuencua()
     ArbolHuffman *arbolTemporal = new ArbolHuffman();
 
     // Reinicia el archivo y escribe el primer elemento
-    ofstream writer("Prueba.fabin", ios::out | ios::binary);
+    ofstream writer(ruta, ios::out | ios::binary);
     if (!writer)
     {
         cout << "No es posible abrir el archivo" << endl;
@@ -346,7 +346,7 @@ void Shell::codificarSecuencua()
             string codigo = arbol->Codificar(it->ObtenerInformacionSec(), mapaTemporalCodigos);
 
             Codigo code;
-            ofstream writer("Prueba.fabin", ios::out | ios::binary | ios::app);
+            ofstream writer(ruta, ios::out | ios::binary | ios::app);
             if (!writer)
             {
                 cout << "No es posible abrir el archivo" << endl;
@@ -365,7 +365,7 @@ void Shell::codificarSecuencua()
     }
 }
 
-void Shell::decodificarSecuencua()
+void Shell::decodificarSecuencua(const string &ruta)
 {
 
     string mapss = this->frecuenciasTotales();
@@ -381,7 +381,7 @@ void Shell::decodificarSecuencua()
     map<char, string> mapaTemporalCodigos;
     ArbolHuffman *arbolTemporal = new ArbolHuffman();
 
-    ifstream f("Prueba.fabin", ios::binary);
+    ifstream f(ruta, ios::binary);
 
     if (f.is_open())
     {

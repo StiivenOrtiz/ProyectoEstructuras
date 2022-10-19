@@ -30,16 +30,10 @@ public:
     void salir();
 
     // Segunda parte del proyecto
-    void codificarSecuencua();
-    void decodificarSecuencua();
+    void codificarSecuencua(const string &ruta);
+    void decodificarSecuencua(const string &ruta);
     int cantidadTotalBases();
     string frecuenciasTotales();
-
-    // Segunda parte del proyecto
-    /* void crearHuffman();
-    void codificarSecuencua();
-    void decodificarSecuencia();
-     */
 
 
     /* void listar_Secuencias();
