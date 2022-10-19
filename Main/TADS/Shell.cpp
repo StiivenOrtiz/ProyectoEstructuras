@@ -303,134 +303,148 @@ string Shell::frecuenciasTotales()
 
 void Shell::codificarSecuencua(const string &ruta)
 {
-    list<Secuencia>::iterator it;
-    map<char, int> mapaTemporalFrecuencias;
-    map<char, string> mapaTemporalCodigos;
-    ArbolHuffman *arbolTemporal = new ArbolHuffman();
-
-    // Reinicia el archivo y escribe el primer elemento
-    ofstream writer(ruta, ios::out | ios::binary);
-    if (!writer)
+    try
     {
-        cout << "No es posible abrir el archivo" << endl;
-        return;
-    }
+        list<Secuencia>::iterator it;
+        map<char, int> mapaTemporalFrecuencias;
+        map<char, string> mapaTemporalCodigos;
+        ArbolHuffman *arbolTemporal = new ArbolHuffman();
 
-    int cantidadSecuencias = secuencia->size();
-    int cantidadTotalBases = this->cantidadTotalBases();
-    string mapas = this->frecuenciasTotales();
-    char arraychar[mapas.size() + 1];
-    strcpy(arraychar, mapas.c_str());
-
-    writer.write((char *)&cantidadTotalBases, sizeof(cantidadTotalBases));
-    writer.write((char *)&arraychar, sizeof(arraychar));
-    writer.write((char *)&cantidadSecuencias, sizeof(cantidadSecuencias));
-    writer.close();
-
-    if (secuencia->size() == 0)
-    {
-        cout << "No hay secuencias cargadas en memoria.\n";
-    }
-    else
-    {
-        // Toma el histograma de cada secuencia en particular
-        for (it = secuencia->begin(); it != secuencia->end(); it++)
+        // Reinicia el archivo y escribe el primer elemento
+        ofstream writer(ruta, ios::out | ios::binary);
+        if (!writer)
         {
-            mapaTemporalFrecuencias = it->Histograma();
-
-            mapaTemporalCodigos = arbol->GenerarCodigo(mapaTemporalFrecuencias);
-            arbolTemporal = arbol->GenerarArbol(mapaTemporalFrecuencias);
-
-            // El mapa queda codificado
-
-            string codigo = arbol->Codificar(it->ObtenerInformacionSec(), mapaTemporalCodigos);
-
-            Codigo code;
-            ofstream writer(ruta, ios::out | ios::binary | ios::app);
-            if (!writer)
-            {
-                cout << "No es posible abrir el archivo" << endl;
-                return;
-            }
-
-            int n = it->ObtenerDescripcion().size();
-
-            strcpy(code.nombreSecuencia, it->ObtenerDescripcion().c_str());
-            code.longitudSecuencia = it->numeroBases();
-            code.indentacion = it->ObtenerTamanioIndentacion();
-            strcpy(code.secuencia, codigo.c_str());
-            writer.write((char *)&code, sizeof(code));
-            writer.close();
+            cout << "No es posible abrir el archivo" << endl;
+            return;
         }
+
+        int cantidadSecuencias = secuencia->size();
+        int cantidadTotalBases = this->cantidadTotalBases();
+        string mapas = this->frecuenciasTotales();
+        char arraychar[mapas.size() + 1];
+        strcpy(arraychar, mapas.c_str());
+
+        writer.write((char *)&cantidadTotalBases, sizeof(cantidadTotalBases));
+        writer.write((char *)&arraychar, sizeof(arraychar));
+        writer.write((char *)&cantidadSecuencias, sizeof(cantidadSecuencias));
+        writer.close();
+
+        if (secuencia->size() == 0)
+        {
+            cout << "No hay secuencias cargadas en memoria.\n";
+        }
+        else
+        {
+            // Toma el histograma de cada secuencia en particular
+            for (it = secuencia->begin(); it != secuencia->end(); it++)
+            {
+                mapaTemporalFrecuencias = it->Histograma();
+
+                mapaTemporalCodigos = arbol->GenerarCodigo(mapaTemporalFrecuencias);
+                arbolTemporal = arbol->GenerarArbol(mapaTemporalFrecuencias);
+
+                // El mapa queda codificado
+
+                string codigo = arbol->Codificar(it->ObtenerInformacionSec(), mapaTemporalCodigos);
+
+                Codigo code;
+                ofstream writer(ruta, ios::out | ios::binary | ios::app);
+                if (!writer)
+                {
+                    cout << "Shell::codificarSecuencua || No es posible abrir el archivo" << ruta << endl;
+                    return;
+                }
+
+                int n = it->ObtenerDescripcion().size();
+
+                strcpy(code.nombreSecuencia, it->ObtenerDescripcion().c_str());
+                code.longitudSecuencia = it->numeroBases();
+                code.indentacion = it->ObtenerTamanioIndentacion();
+                strcpy(code.secuencia, codigo.c_str());
+                writer.write((char *)&code, sizeof(code));
+                writer.close();
+            }
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
     }
 }
 
 void Shell::decodificarSecuencua(const string &ruta)
 {
-
-    string mapss = this->frecuenciasTotales();
-    char arraycharlectura[mapss.size() + 1];
-    Codigo codigoLeido;
-    int prueba;
-    int basesTotales;
-
-    // Variables para decodificar
-
-    list<Secuencia>::iterator it;
-    map<char, int> mapaTemporalFrecuencias;
-    map<char, string> mapaTemporalCodigos;
-    ArbolHuffman *arbolTemporal = new ArbolHuffman();
-
-    ifstream f(ruta, ios::binary);
-
-    if (f.is_open())
+    try
     {
-        cout<<"\n\n------------------------------------------------------------------------------------------------\n\n";
-        
-        f.read((char *)&basesTotales, sizeof(int));
-        cout << "Cantidad total Bases: " << basesTotales << endl;
+        string mapss = this->frecuenciasTotales();
+        char arraycharlectura[mapss.size() + 1];
+        Codigo codigoLeido;
+        int prueba;
+        int basesTotales;
 
-        f.read((char *)&arraycharlectura, sizeof(arraycharlectura));
-        cout << "Bases y frecuencias: " << arraycharlectura << endl;
+        // Variables para decodificar
 
-        f.read((char *)&prueba, sizeof(int));
-        cout << "Cantidad Secuencias: " << prueba << endl;
+        list<Secuencia>::iterator it;
+        map<char, int> mapaTemporalFrecuencias;
+        map<char, string> mapaTemporalCodigos;
+        ArbolHuffman *arbolTemporal = new ArbolHuffman();
 
-        f.read((char *)&codigoLeido, sizeof(Codigo));
+        ifstream f(ruta, ios::binary);
 
-        // Para decondificar tengo que generar el arbol de cada secuencia
-        it = secuencia->begin();
-
-        while (!f.eof())
+        if (f.is_open())
         {
-            cout<<"\n\n------------------------------------------------------------------------------------------------\n\n";
-            cout << "Nombre Secuencia: " << codigoLeido.nombreSecuencia << endl;
-            cout << "Longitud Secuencia: " << codigoLeido.longitudSecuencia << endl;
-            cout << "Indentación: " << codigoLeido.indentacion << endl;
-            cout << "\nCodigo: \n" << codigoLeido.secuencia << endl;
+            cout << "\n\n------------------------------------------------------------------------------------------------\n\n";
 
-            mapaTemporalFrecuencias = it->Histograma();
-            mapaTemporalCodigos = arbol->GenerarCodigo(mapaTemporalFrecuencias);
-            arbolTemporal = arbol->GenerarArbol(mapaTemporalFrecuencias);
+            f.read((char *)&basesTotales, sizeof(int));
+            cout << "Cantidad total Bases: " << basesTotales << endl;
 
-            string decode = arbol->deCodificar(arbolTemporal, codigoLeido.secuencia);
-            cout << "\ndecodificado: ";
-            for (int i = 0; i < decode.size(); i++)
-            {
-                if(i % codigoLeido.indentacion == 0){
-                    cout<<endl;
-                }
-                cout <<decode[i];
+            f.read((char *)&arraycharlectura, sizeof(arraycharlectura));
+            cout << "Bases y frecuencias: " << arraycharlectura << endl;
 
-            }
-            cout<<"\n\n------------------------------------------------------------------------------------------------\n\n";
-            it++;
+            f.read((char *)&prueba, sizeof(int));
+            cout << "Cantidad Secuencias: " << prueba << endl;
+
             f.read((char *)&codigoLeido, sizeof(Codigo));
+
+            // Para decondificar tengo que generar el arbol de cada secuencia
+            it = secuencia->begin();
+
+            while (!f.eof())
+            {
+                cout << "\n\n------------------------------------------------------------------------------------------------\n\n";
+                cout << "Nombre Secuencia: " << codigoLeido.nombreSecuencia << endl;
+                cout << "Longitud Secuencia: " << codigoLeido.longitudSecuencia << endl;
+                cout << "Indentación: " << codigoLeido.indentacion << endl;
+                cout << "\nCodigo: \n"
+                     << codigoLeido.secuencia << endl;
+
+                mapaTemporalFrecuencias = it->Histograma();
+                mapaTemporalCodigos = arbol->GenerarCodigo(mapaTemporalFrecuencias);
+                arbolTemporal = arbol->GenerarArbol(mapaTemporalFrecuencias);
+
+                string decode = arbol->deCodificar(arbolTemporal, codigoLeido.secuencia);
+                cout << "\ndecodificado: ";
+                for (int i = 0; i < decode.size(); i++)
+                {
+                    if (i % codigoLeido.indentacion == 0)
+                    {
+                        cout << endl;
+                    }
+                    cout << decode[i];
+                }
+                cout << "\n\n------------------------------------------------------------------------------------------------\n\n";
+                it++;
+                f.read((char *)&codigoLeido, sizeof(Codigo));
+            }
         }
+        else
+            cout << "Shell::decodificarSecuencua || No es posible abrir el archivo: "<<ruta<< endl;
+        f.close();
     }
-    else
-        cout << "No se pueden cargar las secuencias en -agregar nomarchivo-." << endl;
-    f.close();
+    catch (const exception &e)
+    {
+        cerr << "No se pueden cargar las secuencias porque no hay ningún archivo" << '\n';
+    }
 }
 
 /// @brief Se sale de la función en cualquier punto
