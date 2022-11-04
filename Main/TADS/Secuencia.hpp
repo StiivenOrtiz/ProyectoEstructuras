@@ -18,8 +18,8 @@ class Secuencia
 private:
     string descripcion;
     vector<vector<char>> informacionSecuencia;
-    vector<char> formatoFasta = {'A','C','G','T','U','R','Y','K','M',
-                                    'S','W','B','D','H','V','N','X','-'};
+    vector<char> formatoFasta = {'A', 'C', 'G', 'T', 'U', 'R', 'Y', 'K', 'M',
+                                 'S', 'W', 'B', 'D', 'H', 'V', 'N', 'X', '-'};
 
 public:
     // Constructores
@@ -37,7 +37,7 @@ public:
 
     // Metodos
     void ImprimirSecuencia() const;
-    map<char,int> Histograma() const;
+    map<char, long long int> Histograma() const;
     void imprimirHistograma() const;
     void Enmascarar(const string &subSecuencia);
     int EsSubSecuencia(const string &Secuencia) const;

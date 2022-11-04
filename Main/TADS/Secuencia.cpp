@@ -40,11 +40,23 @@ void Secuencia::InsertarInformacionSec(vector<vector<char>> &InformacionSecuenci
 
 /// @brief Encargada de retornar la descripción de la secuencia.
 /// @return string
+<<<<<<< Updated upstream
 string Secuencia::ObtenerDescripcion() const
+=======
+string Secuencia::ObtenerDescripcion()
+>>>>>>> Stashed changes
 {
     return descripcion;
 }
 
+<<<<<<< Updated upstream
+=======
+int Secuencia::ObtenerTamanioIndentacion() const
+{
+    return informacionSecuencia[0].size();
+}
+
+>>>>>>> Stashed changes
 /// @brief Encargada de obtener la información de la secuencia (vVectorChar o vector<vector<char>).
 /// @return vVectorChar
 vector<vector<char>> Secuencia::ObtenerInformacionSec() const
@@ -58,7 +70,11 @@ void Secuencia::ImprimirSecuencia() const
     int bases = 0;
     bool codigoCompleto = true;
 
+<<<<<<< Updated upstream
     cout << descripcion << endl;
+=======
+    cout << "descripcion: " << descripcion << endl;
+>>>>>>> Stashed changes
 
     for (int i = 0; i < informacionSecuencia.size(); i++)
     {
@@ -88,6 +104,7 @@ void Secuencia::ImprimirSecuencia() const
 /// @brief Metodo encargado de retornar el histograma de la secuencia.
 /// @param Datos
 /// @return
+<<<<<<< Updated upstream
 map<char, int> Secuencia::Histograma() const
 {
     map<char, int> histogramaFinal;
@@ -95,6 +112,15 @@ map<char, int> Secuencia::Histograma() const
     for (int i = 0; i < formatoFasta.size(); i++)
     {
         histogramaFinal.insert(pair<char, int>(formatoFasta[i], 0));
+=======
+map<char, long long int> Secuencia::Histograma() const
+{
+    map<char, long long int> histogramaFinal;
+
+    for (int i = 0; i < formatoFasta.size(); i++)
+    {
+        histogramaFinal.insert(pair<char, long long int>(formatoFasta[i], 0));
+>>>>>>> Stashed changes
     }
 
     for (int i = 0; i < informacionSecuencia.size(); i++)
@@ -105,17 +131,24 @@ map<char, int> Secuencia::Histograma() const
         }
     }
 
+<<<<<<< Updated upstream
     map<char, int>::iterator it;
 
+=======
+>>>>>>> Stashed changes
     return histogramaFinal;
 }
 
 /// @brief Imprime el histograma de secuencias, no gráfico
 void Secuencia::imprimirHistograma() const
 {
+<<<<<<< Updated upstream
     map<char, int> histogramaFinal = Histograma();
 
     map<char, int>::iterator it;
+=======
+    map<char, long long int> histogramaFinal = Histograma();
+>>>>>>> Stashed changes
 
     cout << "\n---------------------------------\n";
     cout << "|    Codigo\t"
