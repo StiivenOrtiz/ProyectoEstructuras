@@ -1,4 +1,5 @@
 {
+<<<<<<< Updated upstream
     "files.associations": {
         "*.ejs": "html",
         "*.rmd": "markdown",
@@ -92,3 +93,28 @@
         "typeindex": "cpp"
     }
 }
+=======
+  "files.associations": {
+    "bitset": "cpp",
+    "regex": "cpp",
+    "string": "cpp",
+    "iostream": "cpp",
+    "chrono": "cpp",
+    "algorithm": "cpp",
+    "unordered_map": "cpp",
+    "unordered_set": "cpp",
+    "*.tcc": "cpp",
+    "ostream": "cpp",
+    "iosfwd": "cpp",
+    "new": "cpp",
+    "deque": "cpp",
+    "list": "cpp",
+    "system_error": "cpp",
+    "fstream": "cpp",
+    "exception": "cpp",
+    "array": "cpp",
+    "initializer_list": "cpp"
+  },
+  "C_Cpp.errorSquiggles": "Disabled"
+}
+>>>>>>> Stashed changes
