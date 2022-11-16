@@ -1,5 +1,3 @@
-<<<<<<< Updated upstream
-=======
 #include "ArbolHuffman.hpp"
 #include <queue>
 
@@ -150,4 +148,3 @@ string ArbolHuffman::deCodificar(ArbolHuffman *raiz, string codigoHuffman)
 
     return str;
 }
->>>>>>> Stashed changes
