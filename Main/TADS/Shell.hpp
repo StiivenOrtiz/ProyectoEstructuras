@@ -24,11 +24,7 @@ public:
     Shell();
     Shell(string comand);
 
-    // Modificador
-
-    /* int guardar(const string &NombreArchivo); */
-
-    // Analizador
+    // Primera parte del proyecto
 
     void cargar(const string &ruta);
     void conteo();
