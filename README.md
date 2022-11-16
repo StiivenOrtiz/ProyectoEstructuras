@@ -1,6 +1,6 @@
 # Proyecto Estructuras de Datos
 
-## Primera entrega (listas, pilas, colas y maps?, escritura de texto)
+## Primera entrega (listas, pilas, colas y maps, escritura de texto)
 
 El programa realiza lo siguiente:
 
