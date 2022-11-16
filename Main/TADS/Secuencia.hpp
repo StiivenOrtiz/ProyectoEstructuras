@@ -28,21 +28,21 @@ public:
     Secuencia(const Secuencia &Secuencia);
 
     // Setters
-    void InsertarDescripcion(string &Descripcion);
-    void InsertarInformacionSec(vector<vector<char>> &InformacionSecuencia);
+    void insertarDescripcion(string &Descripcion);
+    void insertarInformacionSec(vector<vector<char>> &InformacionSecuencia);
 
     // Getters
-    string ObtenerDescripcion();
-    vector<vector<char>> ObtenerInformacionSec() const;
+    string obtenerDescripcion();
+    vector<vector<char>> obtenerInformacionSec() const;
     int numeroBases() const;
-    int ObtenerTamanioIndentacion() const;
+    int obtenerTamanioIndentacion() const;
 
     // Metodos
-    void ImprimirSecuencia() const;
-    map<char, long long int> Histograma() const;
+    void imprimirSecuencia() const;
+    map<char, long long int> histograma() const;
     void imprimirHistograma() const;
-    void Enmascarar(const string &subSecuencia);
-    int EsSubSecuencia(const string &Secuencia) const;
+    void enmascarar(const string &subSecuencia);
+    int esSubSecuencia(const string &Secuencia) const;
 
     // Eliminar Secuencia
     ~Secuencia();
