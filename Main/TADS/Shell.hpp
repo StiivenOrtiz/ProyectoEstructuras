@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Secuencia.hpp"
-<<<<<<< Updated upstream
-=======
 #include "ArbolHuffman.hpp"
 #include <iostream>
 #include <cstddef>
@@ -12,17 +10,13 @@
 #include <vector>
 #include <map>
 #include "CastBit.hpp"
->>>>>>> Stashed changes
 
 class Shell
 {
 private:
     string comando;
     list<Secuencia> *secuencia = new list<Secuencia>();
-<<<<<<< Updated upstream
-=======
     ArbolHuffman *arbol = new ArbolHuffman();
->>>>>>> Stashed changes
 
 public:
     // Contructor
@@ -30,11 +24,7 @@ public:
     Shell();
     Shell(string comand);
 
-    // Modificador
-
-    /* int guardar(const string &NombreArchivo); */
-
-    // Analizador
+    // Primera parte del proyecto
 
     void cargar(const string &ruta);
     void conteo();
@@ -43,14 +33,6 @@ public:
     int esSubsecuencia(string subsecuencia);
     void enmascarar(string subsecuencia);
     void guardar(const string &ruta);
-<<<<<<< Updated upstream
-    string obtenerCommando();
-    void insertarComando(string Comando);
-    string salir();
-    void ayuda();
-    void comenzar();
-    void evaluarComando();
-=======
     void salir();
 
     // Segunda parte del proyecto
@@ -65,7 +47,6 @@ public:
     void evaluarComando();
     void ayuda();
     string obtenerCommando();
->>>>>>> Stashed changes
 
     /* void listar_Secuencias();
     void enmascarar(string secuencia);
