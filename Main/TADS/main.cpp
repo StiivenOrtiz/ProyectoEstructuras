@@ -1,4 +1,5 @@
 #include "shell.cpp"
+#include "Grafo.cpp"
 #include <iostream>
 
 using namespace std;
@@ -19,6 +20,16 @@ int main()
     //  s->listarSecuencias();
     //  s->salir();
 
-    Shell *s = new Shell();
-    s->comenzar();
+    // Shell *s = new Shell();
+    // s->comenzar();
+
+    Secuencia secu;
+    vector<vector<char>> secuencia = {{'C', 'T', 'C', 'C', 'G', 'G', 'T', 'G', 'A', 'G', 'A', 'A', 'A', 'T', 'T', 'T', 'T', 'G', 'G', 'G', 'A', 'T', 'G', 'T', 'A', 'T', 'C', 'A', 'A', 'A', 'T', 'C', 'A', 'C', 'G', 'G', 'T', 'C', 'C', 'T', 'A', 'C', 'T', 'A', 'C'},
+                                      {'T', 'C', 'C', 'C', 'T', 'T', 'C', 'A', 'C', 'G', 'C', 'G', 'A', 'A', 'G', 'G', 'A', 'G', 'T', 'C', 'G', 'G', 'A', 'A', 'G', 'T', 'G', 'A', 'T', 'C', 'T', 'G', 'T', 'A', 'T', 'G', 'A', 'A', 'G', 'C', 'T', 'A', 'T', 'T', 'A'},
+                                      {'C', 'C', 'C', 'T', 'A', 'G', 'G', 'T', 'G', 'G', 'C', 'C', 'A', 'C', 'A', 'C', 'C', 'T', 'A', 'C'}};
+    secu.insertarInformacionSec(secuencia);
+    Grafo grafo(secu);
+    grafo.imprimirGrafo();
+
+    return 0;
 }

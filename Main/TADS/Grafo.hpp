@@ -3,18 +3,26 @@
 #include <vector>
 #include <unordered_map>
 #include <cmath>
-#include "Secuencia.cpp"
+#include "Secuencia.hpp"
 
 using namespace std;
+
+struct Arco
+{
+    pair<int, int> vertice1;
+    pair<int, int> vertice2;
+    float costo;
+};
 
 /// @brief
 class Grafo
 {
 private:
     // (bases)
-    vector<vector<char>> vertices;
+
+    vector<vector<char>> vertices; // vertices[x][y]
     // ((posicion1, posicion2), costo)
-    vector<pair<pair<pair<int, int>, pair<int, int>>, float>> aristas;
+    vector<Arco> aristas;
     unordered_map<string, bool> visitados;
 
 public:
