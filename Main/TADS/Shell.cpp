@@ -51,7 +51,7 @@ void Shell::cargar(const string &ruta)
              *
              */
             getline(miRuta, linea);
-            secuenciaTemp->InsertarDescripcion(linea);
+            secuenciaTemp->insertarDescripcion(linea);
 
             contador++;
 
@@ -60,10 +60,10 @@ void Shell::cargar(const string &ruta)
                 /* Si la linea inicia una secuencia, describo el nombre de la secuencia en un nuevo iterador*/
                 if (linea[0] == '>')
                 {
-                    secuenciaTemp->InsertarInformacionSec(matrizTemporal);
+                    secuenciaTemp->insertarInformacionSec(matrizTemporal);
                     this->secuencia->push_back(*secuenciaTemp);
                     // secuenciaTemp->ImprimirSecuencia();
-                    secuenciaTemp->InsertarDescripcion(linea);
+                    secuenciaTemp->insertarDescripcion(linea);
                     matrizTemporal.clear();
                     vectorTemporal.clear();
                     contador++;
@@ -83,7 +83,7 @@ void Shell::cargar(const string &ruta)
              * para los elementos de la última línea
              *
              */
-            secuenciaTemp->InsertarInformacionSec(matrizTemporal);
+            secuenciaTemp->insertarInformacionSec(matrizTemporal);
             this->secuencia->push_back(*secuenciaTemp);
             // secuenciaTemp->ImprimirSecuencia();
         }
@@ -113,7 +113,6 @@ void Shell::conteo()
 /// @brief Esta función, muestra en la interfaz de comandos, la información de las secuencias e indica la cantidad de bases.
 void Shell::listarSecuencias()
 {
-
     list<Secuencia>::iterator it;
 
     if (secuencia->size() == 0)
@@ -122,7 +121,8 @@ void Shell::listarSecuencias()
     {
         for (it = secuencia->begin(); it != secuencia->end(); it++)
         {
-            it->ImprimirSecuencia();
+            cout << it->obtenerTamanioIndentacion() << endl;
+            it->imprimirSecuencia();
             cout << endl;
         }
     }
@@ -144,7 +144,7 @@ void Shell::histograma(string descripcionSecuencia)
     {
         for (it = secuencia->begin(); it != secuencia->end(); it++)
         {
-            if (it->ObtenerDescripcion() == aux)
+            if (it->obtenerDescripcion() == aux)
             {
                 it->imprimirHistograma();
                 flagExistencia = true;
@@ -172,7 +172,7 @@ int Shell::esSubsecuencia(string esSubsecuencia)
     else
     {
         for (it = secuencia->begin(); it != secuencia->end(); it++)
-            secuenciaRepetida += it->EsSubSecuencia(esSubsecuencia);
+            secuenciaRepetida += it->esSubSecuencia(esSubsecuencia);
     }
     if (secuenciaRepetida == 0)
     {
@@ -201,8 +201,8 @@ void Shell::enmascarar(string subsecuencia)
         // Enmascara en relación a la cantidad de elementos que componen la subsecuencia
         for (it = secuencia->begin(); it != secuencia->end(); it++)
         {
-            secuenciaRepetida += it->EsSubSecuencia(subsecuencia);
-            it->Enmascarar(subsecuencia);
+            secuenciaRepetida += it->esSubSecuencia(subsecuencia);
+            it->enmascarar(subsecuencia);
         }
     }
     if (secuenciaRepetida == 0)
@@ -231,8 +231,8 @@ void Shell::guardar(const string &ruta)
         {
             for (it = secuencia->begin(); it != secuencia->end(); it++)
             {
-                salida << it->ObtenerDescripcion() << endl;
-                vector<vector<char>> vectortemporal = it->ObtenerInformacionSec();
+                salida << it->obtenerDescripcion() << endl;
+                vector<vector<char>> vectortemporal = it->obtenerInformacionSec();
 
                 for (int i = 0; i < vectortemporal.size(); i++)
                 {
@@ -280,11 +280,11 @@ string Shell::frecuenciasTotalesString()
     string str2 = "";
     string str3 = "";
 
-    mapaTemporalAcumulado = it->Histograma();
+    mapaTemporalAcumulado = it->histograma();
 
     for (it = next(it, 1); it != secuencia->end(); it++)
     {
-        mapaTemporal = it->Histograma();
+        mapaTemporal = it->histograma();
         str3 = "";
         for (mapit = mapaTemporal.begin(); mapit != mapaTemporal.end(); mapit++)
         {
@@ -310,11 +310,11 @@ map<char, long long int> Shell::frecuenciasTotalesMap()
     list<Secuencia>::iterator it = secuencia->begin();
     map<char, long long int>::iterator mapit;
 
-    mapaTemporalAcumulado = it->Histograma();
+    mapaTemporalAcumulado = it->histograma();
 
     for (it = next(it, 1); it != secuencia->end(); it++)
     {
-        mapaTemporal = it->Histograma();
+        mapaTemporal = it->histograma();
         for (mapit = mapaTemporal.begin(); mapit != mapaTemporal.end(); mapit++)
         {
             mapaTemporalAcumulado[mapit->first] = mapaTemporalAcumulado[mapit->first] + mapit->second;
@@ -400,7 +400,7 @@ void Shell::codificarSecuencia(const string &ruta)
         for (it = secuencia->begin(); it != secuencia->end(); it++) // Recorremos la lista de secuencias presentes en la memoria.
         {
             //  li es un número entero de 2 bytes que representa el tamaño del nombre de la i-ésima secuencia.
-            binary = ObtenerCodigosBytes(bitset<_2B>(it->ObtenerDescripcion().size()).to_string()); // Obtenemos los bytes correspondientes al tamaño del nombre de la secuencia en la que nos encontramos.
+            binary = ObtenerCodigosBytes(bitset<_2B>(it->obtenerDescripcion().size()).to_string()); // Obtenemos los bytes correspondientes al tamaño del nombre de la secuencia en la que nos encontramos.
             unsigned char tamNombreSecuencia[2];                                                    // Declaramos los 2 bytes en los que será almacenado el valor obtenido en la conversión.
 
             for (int i = 0; i < 2; i++)
@@ -410,15 +410,15 @@ void Shell::codificarSecuencia(const string &ruta)
             binary.clear();
 
             // sij es el caracter que se encuentra en la j-ésima posición del nombre de la i-ésima secuencia.
-            char descripcionSec[it->ObtenerDescripcion().size()];
+            char descripcionSec[it->obtenerDescripcion().size()];
 
-            for (int i = 0; i < it->ObtenerDescripcion().size(); i++)
-                descripcionSec[i] = it->ObtenerDescripcion()[i];
+            for (int i = 0; i < it->obtenerDescripcion().size(); i++)
+                descripcionSec[i] = it->obtenerDescripcion()[i];
 
             writer.write((char *)descripcionSec, sizeof(descripcionSec));
 
             // wi es un número entero de 8 bytes que representa la longitud de la i-ésima secuencia.
-            binary = ObtenerCodigosBytes(bitset<_8B>(UnirCodigos(DivididosSinCero(arbol->Codificar(it->ObtenerInformacionSec(), hojasArboles))).size()).to_string()); // Obtenemos los bytes correspondientes al tamaño de la secuencia en la que nos encontramos.
+            binary = ObtenerCodigosBytes(bitset<_8B>(UnirCodigos(DivididosSinCero(arbol->Codificar(it->obtenerInformacionSec(), hojasArboles))).size()).to_string()); // Obtenemos los bytes correspondientes al tamaño de la secuencia en la que nos encontramos.
             unsigned char longitudSecuencia[8];                                                                                                                       // Declaramos los 8 bytes en los que será almacenado el valor obtenido en la conversión.
 
             for (int i = 0; i < 8; i++)
@@ -428,7 +428,7 @@ void Shell::codificarSecuencia(const string &ruta)
             binary.clear();
 
             // xi es un número entero de 2 bytes que representa la indentación de la i-ésima secuencia.
-            binary = ObtenerCodigosBytes(bitset<_2B>(it->ObtenerTamanioIndentacion()).to_string()); // Obtenemos los bytes correspondientes a la identación secuencia en la que nos encontramos.
+            binary = ObtenerCodigosBytes(bitset<_2B>(it->obtenerTamanioIndentacion()).to_string()); // Obtenemos los bytes correspondientes a la identación secuencia en la que nos encontramos.
             unsigned char identacion[2];                                                            // Declaramos los 2 bytes en los que será almacenado el valor obtenido en la conversión.
 
             for (int i = 0; i < 2; i++)
@@ -438,7 +438,7 @@ void Shell::codificarSecuencia(const string &ruta)
             binary.clear();
 
             // binary_codei es la secuencia binaria (unos y ceros) que representa la i-ésima secuencia. Note que si la secuencia no es múltiplo de 8, se debe completar con los “0” necesarios.
-            binary = ObtenerCodigosBytes(arbol->Codificar(it->ObtenerInformacionSec(), hojasArboles));
+            binary = ObtenerCodigosBytes(arbol->Codificar(it->obtenerInformacionSec(), hojasArboles));
             unsigned char binaryCode[binary.size()];
 
             for (int i = 0; i < binary.size(); i++)
@@ -520,7 +520,7 @@ void Shell::decodificarSecuencia(const string &ruta)
             for (int i = 0; i < tamDescripcion; i++)
                 binario += descripcionChar[i];
 
-            temp.InsertarDescripcion(binario);
+            temp.insertarDescripcion(binario);
             binario.clear();
 
             f.read((char *)&longitudSecuencia, sizeof(longitudSecuencia));
@@ -577,7 +577,7 @@ void Shell::decodificarSecuencia(const string &ruta)
             if (varInfo.size() > 0)
                 infoSec.push_back(varInfo);
 
-            temp.InsertarInformacionSec(infoSec);
+            temp.insertarInformacionSec(infoSec);
             this->secuencia->push_back(temp);
         }
         f.close();

@@ -26,45 +26,45 @@ Secuencia::Secuencia(const Secuencia &Secuencia)
 
 /// @brief La descripción de la secuencia toma la descripción ingresada.
 /// @param Descripcion
-void Secuencia::InsertarDescripcion(string &Descripcion)
+void Secuencia::insertarDescripcion(string &Descripcion)
 {
     descripcion = Descripcion;
 }
 
 /// @brief Ingresar como parametros un vector de vector de char, (Informacion de secuencia), para finalmente insertarlo al vector de vector de char (Informacion de Secuencia) de la clase.
 /// @param InformacionSecuencia
-void Secuencia::InsertarInformacionSec(vector<vector<char>> &InformacionSecuencia)
+void Secuencia::insertarInformacionSec(vector<vector<char>> &InformacionSecuencia)
 {
     informacionSecuencia = InformacionSecuencia;
 }
 
 /// @brief Encargada de retornar la descripción de la secuencia.
 /// @return string
-string Secuencia::ObtenerDescripcion()
+string Secuencia::obtenerDescripcion()
 {
     return descripcion;
 }
 
-int Secuencia::ObtenerTamanioIndentacion() const
+int Secuencia::obtenerTamanioIndentacion() const
 {
     return informacionSecuencia[0].size();
 }
 
 /// @brief Encargada de obtener la información de la secuencia (vVectorChar o vector<vector<char>).
 /// @return vVectorChar
-vector<vector<char>> Secuencia::ObtenerInformacionSec() const
+vector<vector<char>> Secuencia::obtenerInformacionSec() const
 {
     return informacionSecuencia;
 }
 
 /// @brief Metodo encargado de imprimir la secuencia.
-void Secuencia::ImprimirSecuencia() const
+void Secuencia::imprimirSecuencia() const
 {
     int bases = 0;
     // Indica si el código está completo o no
     bool codigoCompleto = true;
 
-    cout << "descripcion: " << descripcion << endl;
+    cout << "Secuencia " << descripcion.substr(1, (descripcion.size() - 1)) << endl;
 
     for (int i = 0; i < informacionSecuencia.size(); i++)
     {
@@ -73,22 +73,16 @@ void Secuencia::ImprimirSecuencia() const
             cout << informacionSecuencia[i][j];
 
             if (codigoCompleto && informacionSecuencia[i][j] == '-')
-            {
                 codigoCompleto = false;
-            }
         }
         cout << endl;
         bases += informacionSecuencia[i].size();
     }
 
     if (codigoCompleto)
-    {
-        cout << "La secuencia: " << descripcion << " contiene " << bases << " bases." << endl;
-    }
+        cout << "contiene " << bases << " bases." << endl;
     else
-    {
-        cout << "La secuencia: " << descripcion << " contiene al menos " << bases << " bases." << endl;
-    }
+        cout << "contiene al menos " << bases << " bases." << endl;
 }
 
 int Secuencia::numeroBases() const
@@ -106,7 +100,7 @@ int Secuencia::numeroBases() const
 /// @brief Metodo encargado de retornar el histograma de la secuencia.
 /// @param Datos
 /// @return
-map<char, long long int> Secuencia::Histograma() const
+map<char, long long int> Secuencia::histograma() const
 {
     map<char, long long int> histogramaFinal;
 
@@ -129,7 +123,7 @@ map<char, long long int> Secuencia::Histograma() const
 /// @brief Imprime el histograma de secuencias, no gráfico
 void Secuencia::imprimirHistograma() const
 {
-    map<char, long long int> histogramaFinal = Histograma();
+    map<char, long long int> histogramaFinal = histograma();
 
     cout << "\n---------------------------------\n";
     cout << "|    Codigo\t"
@@ -146,7 +140,7 @@ void Secuencia::imprimirHistograma() const
 /// @brief Metodo encargado de retornar la cantidad de veces en las que esta secuencia dada se repite.
 /// @param Secuencia
 /// @return
-int Secuencia::EsSubSecuencia(const string &Secuencia) const
+int Secuencia::esSubSecuencia(const string &Secuencia) const
 {
     int vecesRepetida = 0;
     int posicion = 0;
@@ -179,7 +173,7 @@ int Secuencia::EsSubSecuencia(const string &Secuencia) const
 
 /// @brief Pone 'x' sobre los códigos equivalentes al string de parámetro que sean substrings del código completo
 /// @param Secuencia
-void Secuencia::Enmascarar(const string &subSecuencia)
+void Secuencia::enmascarar(const string &subSecuencia)
 {
 
     int posicion = 0;
