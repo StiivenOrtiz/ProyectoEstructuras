@@ -9,8 +9,8 @@ using namespace std;
 
 struct Arco
 {
-    pair<int, int> vertice1;
-    pair<int, int> vertice2;
+    pair<int, int> vertice1; // i, j
+    pair<int, int> vertice2; // x, y
     float costo;
 };
 
@@ -32,12 +32,19 @@ public:
     ~Grafo();
 
     // Funciones de Grafo necesarias
-    int ordenGrafo();
+    void desmarcarGrafo();
+    void marcarVertice(int i, int j);
+    void desmarcarVertice(int i, int j);
+    bool marcadoVertice(int i, int j);
+    float costoArco(int i, int j, int x, int y);
+    pair<int, int> siguienteVertice(vector<vector<float>> costos);
+    int validacion(pair<int, int> &v, vector<vector<float>> &costos);
 
     // Imprirmir grafo
     void imprimirGrafo();
 
     // Funciones claves
+    vector<vector<float>> dijkstra(int i, int j);
     void baseRemota();
     void rutaMasCorta();
 };

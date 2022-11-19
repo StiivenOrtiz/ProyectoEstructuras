@@ -33,10 +33,134 @@ Grafo::~Grafo()
 }
 
 /// @brief
-/// @return
-int Grafo::ordenGrafo()
+void Grafo::desmarcarGrafo()
 {
-    return this->vertices.size();
+    unordered_map<string, bool>::iterator it;
+    for (it = this->visitados.begin(); it != this->visitados.end(); it++)
+        it->second = false;
+}
+
+/// @brief
+/// @param x
+/// @param y
+void Grafo::marcarVertice(int i, int j)
+{
+    string posicion = to_string(i) + "," + to_string(j);
+    this->visitados[posicion] = true;
+}
+
+/// @brief
+/// @param i
+/// @param j
+/// @param x
+/// @param y
+/// @return
+float Grafo::costoArco(int i, int j, int x, int y)
+{
+    for (int indice = 0; indice < this->aristas.size(); indice++)
+    {
+        if (this->aristas[indice].vertice1.first == i && this->aristas[indice].vertice1.second == j)
+            if (this->aristas[indice].vertice2.first == x && this->aristas[indice].vertice2.second == y)
+                return this->aristas[indice].costo;
+
+        if (this->aristas[indice].vertice1.first == x && this->aristas[indice].vertice1.second == y)
+            if (this->aristas[indice].vertice2.first == i && this->aristas[indice].vertice2.second == j)
+                return this->aristas[indice].costo;
+    }
+    return -1;
+}
+
+/// @brief
+/// @param i
+/// @param j
+void Grafo::desmarcarVertice(int i, int j)
+{
+    string posicion = to_string(i) + "," + to_string(j);
+    this->visitados[posicion] = false;
+}
+
+/// @brief
+/// @param i
+/// @param j
+/// @return
+bool Grafo::marcadoVertice(int i, int j)
+{
+    string posicion = to_string(i) + "," + to_string(j);
+    return this->visitados[posicion];
+}
+
+/// @brief
+/// @param costo
+/// @return
+pair<int, int> Grafo::siguienteVertice(vector<vector<float>> costos)
+{
+    pair<int, int> menor = {0, -1};
+    for (int fila = 0; fila < this->vertices.size(); fila++)
+        for (int columna = 0; columna < this->vertices[fila].size(); columna++)
+            if (!marcadoVertice(fila, columna) && costos[fila][columna] != -1)
+                if (menor.second == -1 || costos[fila][menor.second] > costos[fila][columna])
+                {
+                    menor.first = fila;
+                    menor.second = columna;
+                }
+
+    if (menor.second == -1)
+        return {0, -1};
+    else
+    {
+        menor.second;
+        return menor;
+    }
+}
+
+/// @brief
+/// @param i
+/// @param j
+/// @return
+vector<vector<float>> Grafo::dijkstra(int i, int j)
+{
+    int fila, columna;
+    float costo;
+    vector<vector<float>> costos;
+    desmarcarGrafo();
+
+    for (fila = 0; fila < this->vertices.size(); fila++)
+    {
+        vector<float> temp;
+        for (columna = 0; columna < this->vertices[fila].size(); columna++)
+            temp.push_back(costoArco(i, j, fila, columna));
+        costos.push_back(temp);
+    }
+
+    marcarVertice(i, j);
+    costos[i][j] = 0;
+
+    pair<int, int> v;
+    v.first = i;
+    v.second = j;
+
+    while (validacion(v, costos) != -1)
+    {
+        marcarVertice(v.first, v.second);
+        for (fila = 0; fila < this->vertices.size(); fila++)
+        {
+            for (columna = 0; columna < this->vertices[fila].size(); columna++)
+            {
+                if (!marcadoVertice(fila, columna) && (costo = costoArco(v.first, v.second, fila, columna)) != -1)
+                    if (costos[fila][columna] == -1)
+                        costos[fila][columna] = costos[v.first][v.second] + costo;
+                    else
+                        costos[fila][columna] = min(costos[fila][columna], costos[v.first][v.second] + costo);
+            }
+        }
+    }
+    return costos;
+}
+
+int Grafo::validacion(pair<int, int> &v, vector<vector<float>> &costos)
+{
+    v = siguienteVertice(costos);
+    return v.second;
 }
 
 /// @brief
