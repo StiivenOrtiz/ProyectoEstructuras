@@ -823,7 +823,14 @@ void Shell::evaluarComando()
         {
             if (entrada.size() == 6)
             {
-                rutaMasCorta(entrada[1], stoi(entrada[2]), stoi(entrada[3]), stoi(entrada[4]), stoi(entrada[5]));
+                bool numericos = true;
+                for (int indice = 2; indice < entrada.size(); indice++)
+                    if (isNumber(entrada[indice]) == false)
+                        numericos = false;
+                if (numericos == true)
+                    rutaMasCorta(entrada[1], stoi(entrada[2]), stoi(entrada[3]), stoi(entrada[4]), stoi(entrada[5]));
+                else
+                    cout << "Alguno de los valores de i, j, x o y no son numericos" << endl;
                 insertarComando(entrada[0]);
             }
             else
@@ -833,7 +840,14 @@ void Shell::evaluarComando()
         {
             if (entrada.size() == 4)
             {
-                baseRemota(entrada[1], stoi(entrada[2]), stoi(entrada[3]));
+                bool numericos = true;
+                for (int indice = 2; indice < entrada.size(); indice++)
+                    if (isNumber(entrada[indice]) == false)
+                        numericos = false;
+                if (numericos == true)
+                    baseRemota(entrada[1], stoi(entrada[2]), stoi(entrada[3]));
+                else
+                    cout << "Alguno de los valores de i o j no son numericos" << endl;
                 insertarComando(entrada[0]);
             }
             else
