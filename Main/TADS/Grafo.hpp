@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <cmath>
 #include "Secuencia.hpp"
+#include <iomanip>
 
 using namespace std;
 
@@ -19,11 +20,11 @@ class Grafo
 {
 private:
     // (bases)
-
     vector<vector<char>> vertices; // vertices[x][y]
     // ((posicion1, posicion2), costo)
     vector<Arco> aristas;
     unordered_map<string, bool> visitados;
+    string descripcion;
 
 public:
     // Contructor
@@ -37,14 +38,18 @@ public:
     void desmarcarVertice(int i, int j);
     bool marcadoVertice(int i, int j);
     float costoArco(int i, int j, int x, int y);
-    pair<int, int> siguienteVertice(vector<vector<float>> costos);
-    int validacion(pair<int, int> &v, vector<vector<float>> &costos);
+    pair<int, int> siguienteVertice(vector<vector<pair<pair<int, int>, float>>> costos);
+    int validacion(pair<int, int> &v, vector<vector<pair<pair<int, int>, float>>> &costos);
 
     // Imprirmir grafo
     void imprimirGrafo();
+    void imprimirVertices();
+    void imprimirCostos(vector<vector<pair<pair<int, int>, float>>> &costos);
+    void imprimirCaminos(vector<vector<pair<pair<int, int>, float>>> &costos);
 
     // Funciones claves
-    vector<vector<float>> dijkstra(int i, int j);
-    void baseRemota();
-    void rutaMasCorta();
+    vector<vector<pair<pair<int, int>, float>>> dijkstra(int i, int j);
+    vector<pair<int, int>> posicionMismosVertices(int i, int j);
+    bool baseRemota(int i, int j);
+    bool rutaMasCorta(int i, int j, int x, int y);
 };

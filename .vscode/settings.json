@@ -19,6 +19,9 @@
     "exception": "cpp",
     "array": "cpp",
     "initializer_list": "cpp",
-    "cmath": "cpp"
+    "cmath": "cpp",
+    "iomanip": "cpp",
+    "vector": "cpp",
+    "utility": "cpp"
   }
 }

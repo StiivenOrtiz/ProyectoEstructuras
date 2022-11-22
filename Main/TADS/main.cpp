@@ -28,21 +28,35 @@ int main()
                                       {'T', 'C', 'C', 'C', 'T', 'T', 'C', 'A', 'C', 'G', 'C', 'G', 'A', 'A', 'G', 'G', 'A', 'G', 'T', 'C', 'G', 'G', 'A', 'A', 'G', 'T', 'G', 'A', 'T', 'C', 'T', 'G', 'T', 'A', 'T', 'G', 'A', 'A', 'G', 'C', 'T', 'A', 'T', 'T', 'A'},
                                       {'C', 'C', 'C', 'T', 'A', 'G', 'G', 'T', 'G', 'G', 'C', 'C', 'A', 'C', 'A', 'C', 'C', 'T', 'A', 'C'}};
 
-    // vector<vector<char>> secuencia = {{'C', 'C', 'C'},
-    //                                   {'C', 'C', 'C'},
-    //                                   {'C', 'C', 'C'}};
+    // vector<vector<char>> secuencia = {{'C', 'P', 'C'},
+    //                                   {'C', 'J', 'C'},
+    //                                   {'A', 'A', 'A'},
+    //                                   {'C', 'C'}};
+
+    // vector<vector<char>> secuencia = {{'C', 'P', 'A'},
+    //                                   {'C', 'J', 'C'},
+    //                                   {'A', 'A'}};
+
+    string paspi = "Paspi";
     secu.insertarInformacionSec(secuencia);
+    secu.insertarDescripcion(paspi);
+
     Grafo grafo(secu);
-    grafo.imprimirGrafo();
-    vector<vector<float>> costos = grafo.dijkstra(0, 0);
-    for (int i = 0; i < costos.size(); i++)
-    {
-        cout << endl;
-        for (int j = 0; j < costos[i].size(); j++)
-            cout << costos[i][j] << "\t-\t";
-        cout << endl;
-    }
+
     cout << endl;
+
+    grafo.imprimirGrafo();
+
+    vector<vector<pair<pair<int, int>, float>>> costos = grafo.dijkstra(2, 0);
+    grafo.imprimirCostos(costos);
+    grafo.imprimirCaminos(costos);
+
+    cout << endl;
+    grafo.imprimirVertices();
+    cout << endl;
+    grafo.baseRemota(2, 0);
+    cout << endl;
+    grafo.rutaMasCorta(0, 0, 1, 0);
 
     return 0;
 }
