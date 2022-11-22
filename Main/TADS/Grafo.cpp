@@ -213,7 +213,7 @@ bool Grafo::baseRemota(int i, int j)
             if (fila != 0 && caminos[fila].size() > caminos[fila - 1].size())
                 posMax = fila;
 
-        cout << "Para la secuencia " << this->descripcion << ", la base remota esta ubicada en [" << basesIguales[posMax].first << "," << basesIguales[posMax].second << "],"
+        cout << "Para la secuencia " << this->descripcion.substr(1, (descripcion.size() - 1)) << ", la base remota esta ubicada en [" << basesIguales[posMax].first << "," << basesIguales[posMax].second << "],"
              << "\ny la ruta entre la base en [" << i << "," << j << "] y la base remota en [" << basesIguales[posMax].first << "," << basesIguales[posMax].second << "] es:\n\n";
 
         for (int columna = (caminos[posMax].size() - 1); columna >= 0; columna--)
@@ -236,37 +236,48 @@ bool Grafo::baseRemota(int i, int j)
 /// @param x
 /// @param y
 /// @return
-bool Grafo::rutaMasCorta(int i, int j, int x, int y)
+void Grafo::rutaMasCorta(int i, int j, int x, int y)
 {
-    if ((i < this->vertices.size()) && (x < this->vertices.size()))
+    pair<bool, bool> origenDestino = {false, false};
+
+    if (i < this->vertices.size())
+        if (j < this->vertices[i].size())
+            origenDestino.first = true;
+
+    if (origenDestino.first == false)
+        cout << "La base en la posicion [" << i << "," << j << "] no existe." << endl;
+
+    if (x < this->vertices.size())
+        if (y < this->vertices[x].size())
+            origenDestino.second = true;
+
+    if (origenDestino.second == false)
+        cout << "La base en la posición [" << x << "," << y << " ] no existe." << endl;
+
+    if (origenDestino.first == true && origenDestino.second == true)
     {
-        if ((j < this->vertices[i].size()) && (j < this->vertices[x].size()))
+        vector<vector<pair<pair<int, int>, float>>> direccionamiento = dijkstra(i, j);
+        vector<pair<int, int>> caminos;
+        pair<int, int> posicion = {x, y};
+
+        do
         {
-            vector<vector<pair<pair<int, int>, float>>> direccionamiento = dijkstra(i, j);
-            vector<pair<int, int>> caminos;
-            pair<int, int> posicion = {x, y};
+            caminos.push_back(posicion);
+            posicion = {direccionamiento[posicion.first][posicion.second].first};
+        } while (posicion.first != -1 && posicion.second != -1);
 
-            do
-            {
-                caminos.push_back(posicion);
-                posicion = {direccionamiento[posicion.first][posicion.second].first};
-            } while (posicion.first != -1 && posicion.second != -1);
+        cout << "\nPara la secuencia " << this->descripcion.substr(1, (descripcion.size() - 1)) << ", la ruta mas corta entre la base en [" << i << "," << j << "] y la base en"
+             << " [" << x << "," << y << "] es:\n\n";
 
-            cout << "Para la secuencia " << this->descripcion << ", la ruta mas corta entre la base en [" << i << "," << j << "] y la base en"
-                 << " [" << x << "," << y << "] es:\n\n";
-
-            for (int indice = (caminos.size() - 1); indice >= 0; indice--)
-            {
-                cout << "[" << caminos[indice].first << "," << caminos[indice].second << "] ";
-                if (indice != 0)
-                    cout << "- ";
-            }
-
-            cout << "\n\nEl costo total de la ruta es: " << direccionamiento[x][y].second << "\n\n";
-            return true;
+        for (int indice = (caminos.size() - 1); indice >= 0; indice--)
+        {
+            cout << "[" << caminos[indice].first << "," << caminos[indice].second << "] ";
+            if (indice != 0)
+                cout << "- ";
         }
+
+        cout << "\n\nEl costo total de la ruta es: " << direccionamiento[x][y].second << "\n\n";
     }
-    return false;
 }
 
 /// @brief

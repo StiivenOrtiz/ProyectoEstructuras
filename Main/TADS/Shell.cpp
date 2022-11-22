@@ -121,7 +121,6 @@ void Shell::listarSecuencias()
     {
         for (it = secuencia->begin(); it != secuencia->end(); it++)
         {
-            cout << it->obtenerTamanioIndentacion() << endl;
             it->imprimirSecuencia();
             cout << endl;
         }
@@ -658,6 +657,61 @@ void Shell::ayuda()
     cout << ">salir:\nCierra el programa.\n";
 }
 
+/// @brief
+/// @param descripcionSecuencia
+/// @param i
+/// @param j
+void Shell::baseRemota(string descripcionSecuencia, int i, int j)
+{
+    if (this->secuencia->size() == 0)
+        cout << "No hay secuencias cargadas en memoria.\n";
+    else
+    {
+        bool flagExistencia = false;
+        string aux = ">" + descripcionSecuencia;
+        list<Secuencia>::iterator it;
+        for (it = secuencia->begin(); it != secuencia->end(); it++)
+            if (it->obtenerDescripcion() == aux)
+            {
+                flagExistencia = true;
+                Grafo grafo(*it);
+                if (!grafo.baseRemota(i, j))
+                    cout << "La base en la posición [" << i << "," << j << "] no existe." << endl;
+                break;
+            }
+        if (flagExistencia == false)
+            cout << "La secuencia" << descripcionSecuencia << "no existe." << endl;
+    }
+}
+
+/// @brief
+/// @param descripcionSecuencia
+/// @param i
+/// @param j
+/// @param x
+/// @param y
+void Shell::rutaMasCorta(string descripcionSecuencia, int i, int j, int x, int y)
+{
+    if (this->secuencia->size() == 0)
+        cout << "No hay secuencias cargadas en memoria.\n";
+    else
+    {
+        bool flagExistencia = false;
+        string aux = ">" + descripcionSecuencia;
+        list<Secuencia>::iterator it;
+        for (it = secuencia->begin(); it != secuencia->end(); it++)
+            if (it->obtenerDescripcion() == aux)
+            {
+                flagExistencia = true;
+                Grafo grafo(*it);
+                grafo.rutaMasCorta(i, j, x, y);
+                break;
+            }
+        if (flagExistencia == false)
+            cout << "La secuencia" << descripcionSecuencia << "no existe." << endl;
+    }
+}
+
 /// @brief Se sale de la función en cualquier punto
 void Shell::salir()
 {
@@ -673,17 +727,13 @@ void Shell::evaluarComando()
     string::iterator it;
 
     for (it = comando.begin(); it != comando.end(); it++)
-    {
         if ((*it == ' ') || (it == comando.end()--))
         {
             entrada.push_back(aux);
             aux.clear();
         }
         else
-        {
             aux = aux + *it;
-        }
-    }
 
     entrada.push_back(aux);
 
@@ -773,38 +823,44 @@ void Shell::evaluarComando()
         {
             if (entrada.size() == 6)
             {
-                cout << "En construccion" << endl;
+                bool numericos = true;
+                for (int indice = 2; indice < entrada.size(); indice++)
+                    if (isNumber(entrada[indice]) == false)
+                        numericos = false;
+                if (numericos == true)
+                    rutaMasCorta(entrada[1], stoi(entrada[2]), stoi(entrada[3]), stoi(entrada[4]), stoi(entrada[5]));
+                else
+                    cout << "Alguno de los valores de i, j, x o y no son numericos" << endl;
                 insertarComando(entrada[0]);
             }
             else
-                cout << "No se especifico el archivo." << endl;
+                cout << "No hay argumentos suficientes." << endl;
         }
         else if (entrada[0] == "base_remota")
         {
             if (entrada.size() == 4)
             {
-                cout << "En construccion" << endl;
+                bool numericos = true;
+                for (int indice = 2; indice < entrada.size(); indice++)
+                    if (isNumber(entrada[indice]) == false)
+                        numericos = false;
+                if (numericos == true)
+                    baseRemota(entrada[1], stoi(entrada[2]), stoi(entrada[3]));
+                else
+                    cout << "Alguno de los valores de i o j no son numericos" << endl;
                 insertarComando(entrada[0]);
             }
             else
-                cout << "No se especifico el archivo." << endl;
+                cout << "No hay argumentos suficientes" << endl;
         }
         else if (entrada[0] == "salir")
-        {
             salir();
-        }
         else if (entrada[0] == "ayuda")
-        {
             ayuda();
-        }
         else if (entrada[0] == "clear")
-        {
             system("CLS");
-        }
         else
-        {
             cout << "Comando inexistente." << endl;
-        }
         cout << endl;
     }
 }

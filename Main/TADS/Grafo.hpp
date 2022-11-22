@@ -51,5 +51,5 @@ public:
     vector<vector<pair<pair<int, int>, float>>> dijkstra(int i, int j);
     vector<pair<int, int>> posicionMismosVertices(int i, int j);
     bool baseRemota(int i, int j);
-    bool rutaMasCorta(int i, int j, int x, int y);
+    void rutaMasCorta(int i, int j, int x, int y);
 };
