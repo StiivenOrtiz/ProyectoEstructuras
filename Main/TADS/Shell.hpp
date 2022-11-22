@@ -10,6 +10,7 @@
 #include <vector>
 #include <map>
 #include "CastBit.hpp"
+#include "Grafo.hpp"
 
 class Shell
 {
@@ -25,7 +26,6 @@ public:
     Shell(string comand);
 
     // Primera parte del proyecto
-
     void cargar(const string &ruta);
     void conteo();
     void listarSecuencias();
@@ -48,14 +48,9 @@ public:
     void ayuda();
     string obtenerCommando();
 
-    /* void listar_Secuencias();
-    void enmascarar(string secuencia);
-    bool codificar(string nombreArchivo);
-    int esSubsecuencia(string subsecuencia);
-    void decodificar(string nombreArchivo);
-    vector<map<char,int>> histograma(string descripcionSecuencia);
-    void baseRemota(string descripcionSecuencia, vector<char> letras);
-    void rutaMasCorta(string descripcionSecuencia, vector<char> letras); */
+    // Tercera parte del proyecto
+    void baseRemota(string descripcionSecuencia, int i, int j);
+    void rutaMasCorta(string descripcionSecuencia, int i, int j, int x, int y);
 
     // Destructor
     ~Shell();
